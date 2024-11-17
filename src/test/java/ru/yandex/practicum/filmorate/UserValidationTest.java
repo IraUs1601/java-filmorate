@@ -67,7 +67,7 @@ public class UserValidationTest {
         User user = new User();
         user.setEmail("futureuser@example.com");
         user.setLogin("futureLogin");
-        user.setBirthday(LocalDate.now().plusDays(10)); // Future date
+        user.setBirthday(LocalDate.now().plusDays(10));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
