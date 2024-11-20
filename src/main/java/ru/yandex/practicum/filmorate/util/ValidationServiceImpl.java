@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,10 +34,15 @@ public class ValidationServiceImpl implements ValidationService {
             log.warn("Validation failed: Film release date is invalid");
             throw new ValidationException("Film release date cannot be before 28-12-1895");
         }
+        if (film.getReleaseDate().isAfter(LocalDate.now())) {
+            log.warn("Validation failed: Film release date is in the future");
+            throw new ValidationException("Film release date must be in the past or present");
+        }
         if (film.getDuration() <= 0) {
             log.warn("Validation failed: Film duration is non-positive");
             throw new ValidationException("Film duration must be a positive number");
         }
+
         log.info("Film validated successfully: {}", film.getName());
     }
 
@@ -49,7 +54,7 @@ public class ValidationServiceImpl implements ValidationService {
             log.warn("Validation failed: User email is empty");
             throw new ValidationException("User email cannot be empty");
         }
-        if (!user.getEmail().contains("@")) {
+        if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             log.warn("Validation failed: User email is invalid");
             throw new ValidationException("User email must be valid");
         }
@@ -57,10 +62,15 @@ public class ValidationServiceImpl implements ValidationService {
             log.warn("Validation failed: User login is empty");
             throw new ValidationException("User login cannot be empty");
         }
+        if (user.getName() != null && user.getName().length() > 100) {
+            log.warn("Validation failed: User name exceeds 100 characters");
+            throw new ValidationException("User name cannot exceed 100 characters");
+        }
         if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Validation failed: User birthday is in the future");
             throw new ValidationException("User birthday cannot be in the future");
         }
+
         log.info("User validated successfully: {}", user.getLogin());
     }
 }
