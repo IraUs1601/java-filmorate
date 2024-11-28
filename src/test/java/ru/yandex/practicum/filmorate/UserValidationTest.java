@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserValidationTest {
 
-    private ValidationServiceImpl validator;
+    private ValidationServiceImpl validationService;
 
     @BeforeEach
     public void setUp() {
-        validator = new ValidationServiceImpl();
+        validationService = new ValidationServiceImpl();
     }
 
     @Test
@@ -27,7 +27,7 @@ public class UserValidationTest {
         user.setName("Valid User");
         user.setBirthday(LocalDate.of(1985, 5, 20));
 
-        assertDoesNotThrow(() -> validator.validate(user),
+        assertDoesNotThrow(() -> validationService.validate(user),
                 "A valid user must pass validation.");
     }
 
@@ -39,7 +39,7 @@ public class UserValidationTest {
         user.setBirthday(LocalDate.of(2000, 7, 15));
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> validator.validate(user),
+                () -> validationService.validate(user),
                 "An invalid email should trigger validation errors.");
 
         assertEquals("User email must be valid", exception.getMessage(),
@@ -50,11 +50,11 @@ public class UserValidationTest {
     public void shouldNotAllowEmptyLogin() {
         User user = new User();
         user.setEmail("email@example.com");
-        user.setLogin(""); // Blank login
+        user.setLogin(""); // Пустой логин
         user.setBirthday(LocalDate.of(1995, 10, 10));
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> validator.validate(user),
+                () -> validationService.validate(user),
                 "An empty login must fail validation.");
 
         assertEquals("User login cannot be empty", exception.getMessage(),
@@ -66,10 +66,10 @@ public class UserValidationTest {
         User user = new User();
         user.setEmail("futureuser@example.com");
         user.setLogin("futureLogin");
-        user.setBirthday(LocalDate.now().plusDays(10)); // Future date
+        user.setBirthday(LocalDate.now().plusDays(10)); // Дата в будущем
 
         ValidationException exception = assertThrows(ValidationException.class,
-                () -> validator.validate(user),
+                () -> validationService.validate(user),
                 "Birthdays in the future should not be valid.");
 
         assertEquals("User birthday cannot be in the future", exception.getMessage(),
@@ -84,10 +84,10 @@ public class UserValidationTest {
         user.setBirthday(LocalDate.of(1990, 3, 14));
         user.setName(null); // Name is null
 
-        assertDoesNotThrow(() -> validator.validate(user),
+        assertDoesNotThrow(() -> validationService.validate(user),
                 "A null name should pass validation and default to login.");
 
-        assertEquals("defaultLogin", user.getDisplayName(),
-                "If name is null, display name should default to login.");
+        assertEquals("defaultLogin", user.getName(),
+                "If name is null, it should default to login.");
     }
 }

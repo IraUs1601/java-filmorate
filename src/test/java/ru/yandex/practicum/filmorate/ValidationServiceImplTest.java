@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.ValidationServiceImpl;
 
-
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,8 +22,12 @@ public class ValidationServiceImplTest {
         film.setReleaseDate(LocalDate.of(2000, 1, 1));
         film.setDuration(100);
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> validationService.validate(film));
-        assertEquals("Film name cannot be empty", exception.getMessage());
+        ValidationException exception = assertThrows(ValidationException.class,
+                () -> validationService.validate(film),
+                "A film with an empty name should fail validation.");
+
+        assertEquals("Film name cannot be empty", exception.getMessage(),
+                "Expected validation message for empty film name.");
     }
 
     @Test
@@ -34,7 +37,11 @@ public class ValidationServiceImplTest {
         user.setLogin("validLogin");
         user.setBirthday(LocalDate.of(1990, 1, 1));
 
-        ValidationException exception = assertThrows(ValidationException.class, () -> validationService.validate(user));
-        assertEquals("User email must be valid", exception.getMessage());
+        ValidationException exception = assertThrows(ValidationException.class,
+                () -> validationService.validate(user),
+                "A user with an invalid email should fail validation.");
+
+        assertEquals("User email must be valid", exception.getMessage(),
+                "Expected validation message for invalid email format.");
     }
 }
