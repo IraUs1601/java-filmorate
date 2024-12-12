@@ -22,6 +22,10 @@ public class ValidationServiceImpl implements ValidationService {
             log.warn("Validation failed: Film name is empty");
             throw new ValidationException("Film name cannot be empty");
         }
+        if (!film.getName().matches("^[a-zA-Z0-9\\s]+$")) {
+            log.warn("Validation failed: Film name contains invalid characters");
+            throw new ValidationException("Film name contains invalid characters");
+        }
         if (film.getDescription() == null || film.getDescription().isEmpty()) {
             log.warn("Validation failed: Film description is empty");
             throw new ValidationException("Film description cannot be empty");
@@ -62,9 +66,9 @@ public class ValidationServiceImpl implements ValidationService {
             log.warn("Validation failed: User login is empty");
             throw new ValidationException("User login cannot be empty");
         }
-        if (user.getName() != null && user.getName().length() > 100) {
-            log.warn("Validation failed: User name exceeds 100 characters");
-            throw new ValidationException("User name cannot exceed 100 characters");
+        if (user.getName() == null || user.getName().isBlank()) {
+            log.info("Setting default name to login for user: {}", user.getLogin());
+            user.setName(user.getLogin());
         }
         if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Validation failed: User birthday is in the future");
