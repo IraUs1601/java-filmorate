@@ -8,4 +8,8 @@ public interface ValidationService {
     void validate(Film film) throws ValidationException;
 
     void validate(User user) throws ValidationException;
+
+    boolean isMpaRatingValid(int mpaRatingId);
+
+    boolean isGenreValid(int genreId);
 }

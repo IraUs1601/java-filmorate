@@ -1,24 +1,29 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Film {
     private int id;
     private String name;
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private Set<Integer> likes = new HashSet<>();
-    @NotNull(message = "Genres cannot be null")
-    private List<Genre> genres;
 
-    @NotNull(message = "MPA rating cannot be null")
+    @JsonProperty("mpa")
     private MpaRating mpaRating;
+
+    private List<Genre> genres = new ArrayList<>();
+    private Set<Integer> likes = new HashSet<>();
 }
